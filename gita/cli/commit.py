@@ -9,7 +9,7 @@
 import typer 
 from gita.core.commit_service import CommitService
 
-def commit_command():
+def commit_command(dry_run: bool = typer.Option(False, "--dry-run", help="Generate commit message without committing")):
     """
     Generate a commit message using AI.
 
@@ -30,4 +30,18 @@ def commit_command():
     
     typer.echo("Generated commit message:\n")
     typer.echo(message)
+
+    if dry_run:
+        return
     
+    confirm = typer.confirm("Commit with this message?", default=True)
+
+    if confirm:
+        try:
+            service.commit(message)
+            typer.echo("Changes committed successfully.")
+        except RuntimeError as e:
+            typer.echo(f"Error: {e}")
+            raise typer.Exit(code=1)
+    else:
+        typer.echo("Commit aborted.")

@@ -10,6 +10,10 @@
 #   - Call config storage layer
 
 import typer
+import keyring
+
+from gita.constants import KEYRING_SERVICE
+from gita.config.storage import save_config
 
 def init_command():
     """
@@ -21,4 +25,23 @@ def init_command():
     Usage:
         gita init
     """
-    
+
+    provider = typer.prompt("Enter provider name")
+    base_url = typer.prompt("Enter API base URL")
+    model = typer.prompt("Enter model name")
+    style = typer.prompt("Enter commit style (conventional/simple/detailed)")
+
+    api_key = typer.prompt("Enter API key", hide_input=True)
+
+    config_data = {
+        "provider": provider,
+        "base_url": base_url,
+        "model": model,
+        "style": style,
+    }
+
+    save_config(config_data)
+
+    keyring.set_password(KEYRING_SERVICE, provider, api_key)
+
+    typer.echo("Configuration saved successfully!")

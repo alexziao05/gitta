@@ -17,7 +17,7 @@ class CommitService:
     """
     Orchestrates the commit workflow. 
     """
-    def run(self) -> str:
+    def run(self, dry_run: bool = False) -> str:
         """
         Executes the commit workflow.
 
@@ -37,6 +37,21 @@ class CommitService:
             raise RuntimeError("No staged changes to commit.")
         
         message = generate_commit_message(diff)
+
+        if dry_run:
+            return message
         
         return message
+    
+    def commit(self, message: str) -> None:
+        """
+        Commits the staged changes with the provided message.
+
+        Args:
+            message (str): The commit message to use.
+
+        Raises:
+            RuntimeError: If the commit command fails.
+        """
+        GitRepository.commit(message)
 

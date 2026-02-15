@@ -19,3 +19,13 @@ class GitRepository:
             text=True
         )
         return result.returncode == 0
+    
+    @staticmethod
+    def commit(message: str) -> None:
+        result = subprocess.run(
+            ["git", "commit", "-m", message],
+            capture_output=True,
+            text=True
+        )
+        if result.returncode != 0:
+            raise RuntimeError(f"Error: {result.stderr}")

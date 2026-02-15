@@ -6,6 +6,7 @@
 #   - Call AI client
 #   - Return clean commit message
 
+from gita.ai.client import AIClient
 def generate_commit_message(diff: str) -> str:
     """
     Generate a commit message from a git diff using an AI client.
@@ -17,6 +18,5 @@ def generate_commit_message(diff: str) -> str:
         str: The generated commit message.
     """
    
-    lines_changed = len(diff.splitlines())
-
-    return f"chore: update {lines_changed} lines of code"
+    client = AIClient()
+    return client.generate_commit_message(diff)
