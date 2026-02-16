@@ -25,6 +25,9 @@ You'll be prompted for:
 - **Commit style** (`conventional`, `simple`, or `detailed`)
 - **API key**
 
+Recommended configuration:
+![Recommended Configuration for 'gitta init'](image.png)
+
 ### 2. Stage files and commit
 
 ```bash
