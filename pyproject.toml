@@ -1,9 +1,9 @@
 [project]
-name = "gita"
-version = "0.1.0"
+name = "gitta"
+version = "0.1.1"
 description = "Add your description here"
 readme = "README.md"
-requires-python = ">=3.14"
+requires-python = ">=3.9"
 dependencies = [
     "keyring>=25.7.0",
     "openai>=2.21.0",
@@ -12,5 +12,9 @@ dependencies = [
     "typer>=0.23.1",
 ]
 
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
 [project.scripts]
-gita = "gita.main:app"
+gitta = "gitta.main:app"
