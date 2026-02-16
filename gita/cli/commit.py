@@ -59,9 +59,7 @@ def commit_command(dry_run: bool = typer.Option(False, "--dry-run", help="Genera
             message = open_editor_with_message(message)
 
             if not message.strip():
-                typer.echo("Commit message cannot be empty. Please try again.")
-            else:
-                typer.echo("\nUpdated commit message:\n")
-                typer.echo(message)
+                typer.echo("Commit message cannot be empty.")
+                message = service.run(dry_run=True)  # Regenerate original
         else:
             typer.echo("Invalid choice. Please enter 'y', 'n', or 'e'.")
