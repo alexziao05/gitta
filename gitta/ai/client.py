@@ -11,7 +11,7 @@
 import keyring
 from openai import OpenAI
 
-from gitta.ai.prompts import COMMIT_PROMPT_TEMPLATE, STYLE_INSTRUCTIONS
+from gitta.ai.prompts import COMMIT_PROMPT_TEMPLATE, SCOPED_COMMIT_PROMPT_TEMPLATE, STYLE_INSTRUCTIONS
 from gitta.config.settings import Settings
 from gitta.constants import KEYRING_SERVICE
 
@@ -45,6 +45,36 @@ class AIClient:
         """
         style_instructions = STYLE_INSTRUCTIONS.get(self.style, STYLE_INSTRUCTIONS["conventional"])
         prompt = COMMIT_PROMPT_TEMPLATE.format(diff=diff, style_instructions=style_instructions)
+
+        response = self.client.chat.completions.create(
+            model=self.model,
+            messages=[
+                {"role": "user", "content": prompt}
+            ],
+            temperature=0,
+        )
+
+        return response.choices[0].message.content.strip()
+
+    def generate_scoped_commit_message(self, scope: str, files: list[str], diff: str) -> str:
+        """
+        Generate a commit message scoped to a specific module/group.
+
+        Args:
+            scope: The module or directory name (e.g., "cli", "ai").
+            files: List of file paths in this group.
+            diff: The combined diff text for this group.
+
+        Returns:
+            str: The generated scoped commit message.
+        """
+        style_instructions = STYLE_INSTRUCTIONS.get(self.style, STYLE_INSTRUCTIONS["conventional"])
+        prompt = SCOPED_COMMIT_PROMPT_TEMPLATE.format(
+            scope=scope,
+            file_list=", ".join(files),
+            diff=diff,
+            style_instructions=style_instructions,
+        )
 
         response = self.client.chat.completions.create(
             model=self.model,

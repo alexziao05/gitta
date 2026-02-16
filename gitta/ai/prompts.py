@@ -29,3 +29,15 @@ Generate a concise commit message based on the following git diff.
 Git diff:
 {diff}
 """
+
+SCOPED_COMMIT_PROMPT_TEMPLATE = """
+You are an expert software engineer.
+
+Generate a concise commit message for changes in the "{scope}" module.
+The changes affect these files: {file_list}
+
+{style_instructions}
+
+Git diff:
+{diff}
+"""
