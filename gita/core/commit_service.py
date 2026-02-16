@@ -83,22 +83,21 @@ class CommitService:
 
             if choice == "y":
                 GitRepository.commit(message)
-                print_success("Commit successful.")
+                print_success("\nCommit successful.")
                 break
 
             elif choice == "n":
-                print_error("Commit cancelled.")
+                print_error("\nCommit cancelled.")
                 break
 
             elif choice == "e":
                 message = open_editor_with_message(message)
 
                 if not message.strip():
-                    print_error("Commit message cannot be empty.")
+                    print_error("\nCommit message cannot be empty.")
                     message = self.run(dry_run=True)  # Regenerate original message
 
             else:
-                print_error("Invalid option. Enter y, n, or e.")
-
+                print_error("\nInvalid option. Enter y, n, or e.\n\n")
 
 

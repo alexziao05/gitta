@@ -10,7 +10,7 @@ import typer
 from rich.console import Console
 
 from gita.core.commit_service import CommitService
-from gita.utils.editor import open_editor_with_message
+from gita.utils.console import print_error, print_success, print_info, print_regular
 from gita.utils.loading import show_loading
 
 console = Console()
@@ -32,7 +32,7 @@ def commit_command(dry_run: bool = typer.Option(False, "--dry-run", help="Genera
         with show_loading("Generating commit message..."):
             message = service.run(dry_run=dry_run)
     except RuntimeError as e:
-        typer.echo(f"Error: {e}")
+        print_error(f"Error: {e}")
         raise typer.Exit(code=1)
 
     if dry_run:
