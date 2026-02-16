@@ -7,8 +7,13 @@
 #   - Handle CLI-level errors
 
 import typer 
+from rich.console import Console
+
 from gita.core.commit_service import CommitService
 from gita.utils.editor import open_editor_with_message
+from gita.utils.loading import show_loading
+
+console = Console()
 
 def commit_command(dry_run: bool = typer.Option(False, "--dry-run", help="Generate commit message without committing")):
     """
@@ -24,7 +29,8 @@ def commit_command(dry_run: bool = typer.Option(False, "--dry-run", help="Genera
     service = CommitService()
 
     try:
-        message = service.run()
+        with show_loading("Generating commit message..."):
+            message = service.run(dry_run=dry_run)
     except RuntimeError as e:
         typer.echo(f"Error: {e}")
         raise typer.Exit(code=1)
