@@ -2,6 +2,8 @@
 
 AI-powered Git commit messages from your terminal.
 
+By: Alex Huang 
+
 ## Installation
 
 ```bash
