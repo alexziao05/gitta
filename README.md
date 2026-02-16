@@ -2,7 +2,9 @@
 
 AI-powered Git commit messages from your terminal.
 
-By: Alex Huang 
+<p align="center">
+  <img src="demo.gif" alt="Gitta Demo" width="600">
+</p>
 
 ## Installation
 
@@ -24,9 +26,6 @@ You'll be prompted for:
 - **Model** (e.g. `gpt-4o`)
 - **Commit style** (`conventional`, `simple`, or `detailed`)
 - **API key**
-
-Recommended configuration:
-![Recommended Configuration for 'gitta init'](image.png)
 
 ### 2. Stage files and commit
 
@@ -64,3 +63,9 @@ gitta ship
 | `gitta config get <key>` | Get a single config value |
 | `gitta config set <key> <value>` | Update a config value |
 | `gitta doctor` | Check your setup for issues |
+
+## Recommended Configuration
+
+<p align="center">
+  <img src="configuration.png" alt="Recommended Configuration" width="500">
+</p>
