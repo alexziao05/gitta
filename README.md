@@ -3,7 +3,7 @@
 AI-powered Git commit messages from your terminal.
 
 <p align="center">
-  <img src="demo.gif" alt="Gitta Demo" width="600">
+  <img src="https://raw.githubusercontent.com/alexziao05/gitta/main/demo.gif" alt="Gitta Demo" width="600">
 </p>
 
 ## Installation
@@ -67,5 +67,5 @@ gitta ship
 ## Recommended Configuration
 
 <p align="center">
-  <img src="configuration.png" alt="Recommended Configuration" width="500">
+  <img src="https://raw.githubusercontent.com/alexziao05/gitta/main/configuration.png" alt="Recommended Configuration" width="500">
 </p>
