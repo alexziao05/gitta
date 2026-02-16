@@ -9,6 +9,7 @@
 import typer
 
 from gita.core.commit_service import CommitService
+from gita.config.settings import Settings
 from gita.cli.confirm import confirm_and_commit
 from gita.utils.console import print_error, print_info
 from gita.utils.loading import show_loading
@@ -24,6 +25,12 @@ def commit_command(dry_run: bool = typer.Option(False, "--dry-run", help="Genera
     Usage:
         gita commit
     """
+    try:
+        Settings().validate_api_key()
+    except RuntimeError as e:
+        print_error(f"Error: {e}")
+        raise typer.Exit(code=1)
+
     service = CommitService()
 
     try:

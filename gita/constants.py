@@ -14,3 +14,5 @@ CONFIG_DIR = Path.home() / ".gita"
 CONFIG_FILE = CONFIG_DIR / "config.toml"
 
 KEYRING_SERVICE = "gita"
+
+VALID_STYLES = ["conventional", "simple", "detailed"]

@@ -34,14 +34,14 @@ def doctor_command():
     if shutil.which("git"):
         print_success("[OK] Git is installed")
     else:
-        print_error("[FAIL] Git is not installed")
+        print_error("[FAIL] Git is not installed. Install it from https://git-scm.com")
         all_passed = False
 
     # 2. Check inside a git repo
     if GitRepository.is_git_repo():
         print_success("[OK] Inside a Git repository")
     else:
-        print_error("[FAIL] Not inside a Git repository")
+        print_error("[FAIL] Not inside a Git repository. Run 'git init' or navigate to a repo.")
         all_passed = False
 
     # 3. Check config file exists
@@ -65,7 +65,7 @@ def doctor_command():
         if config.get(field):
             print_success(f"[OK] Config field '{field}' is set: {config[field]}")
         else:
-            print_error(f"[FAIL] Config field '{field}' is missing or empty")
+            print_error(f"[FAIL] Config field '{field}' is missing or empty. Run 'gita init' to fix.")
             all_passed = False
 
     # 5. Check API key in keyring
@@ -89,7 +89,7 @@ def doctor_command():
             client.models.retrieve(model)
             print_success(f"[OK] Model '{model}' is available from provider")
         except Exception as e:
-            print_error(f"[FAIL] Could not reach provider or model: {e}")
+            print_error(f"[FAIL] Could not reach provider or model: {e}. Check your base_url and model in 'gita init'.")
             all_passed = False
 
     # Summary

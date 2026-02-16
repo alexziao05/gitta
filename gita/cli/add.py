@@ -10,6 +10,7 @@ import typer
 
 from gita.git.repository import GitRepository
 from gita.core.commit_service import CommitService
+from gita.config.settings import Settings
 from gita.cli.confirm import confirm_and_commit
 from gita.utils.console import print_error, print_info, print_success
 from gita.utils.loading import show_loading
@@ -44,6 +45,12 @@ def add_command(
 
     staged = GitRepository.get_staged_files()
     print_success(f"Staged {len(staged)} file(s): {', '.join(staged)}")
+
+    try:
+        Settings().validate_api_key()
+    except RuntimeError as e:
+        print_error(f"Error: {e}")
+        raise typer.Exit(code=1)
 
     service = CommitService()
 

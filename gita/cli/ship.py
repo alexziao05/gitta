@@ -11,6 +11,7 @@ import typer
 
 from gita.git.repository import GitRepository
 from gita.core.commit_service import CommitService
+from gita.config.settings import Settings
 from gita.cli.confirm import confirm_and_commit
 from gita.utils.console import print_error, print_info, print_success
 from gita.utils.loading import show_loading
@@ -30,6 +31,11 @@ def ship_command():
         print_error("Error: Not inside a Git repository.")
         raise typer.Exit(code=1)
 
+    branch = GitRepository.get_current_branch()
+    if branch == "HEAD":
+        print_error("Error: Cannot ship from a detached HEAD. Check out a branch first.")
+        raise typer.Exit(code=1)
+
     try:
         GitRepository.stage_files(["."])
     except RuntimeError as e:
@@ -43,6 +49,12 @@ def ship_command():
         raise typer.Exit(code=0)
 
     print_success(f"Staged {len(staged)} file(s): {', '.join(staged)}")
+
+    try:
+        Settings().validate_api_key()
+    except RuntimeError as e:
+        print_error(f"Error: {e}")
+        raise typer.Exit(code=1)
 
     service = CommitService()
 
@@ -59,8 +71,6 @@ def ship_command():
         GitRepository.unstage_files(staged)
         print_info("Staged files have been unstaged.")
         return
-
-    branch = GitRepository.get_current_branch()
 
     try:
         GitRepository.push()

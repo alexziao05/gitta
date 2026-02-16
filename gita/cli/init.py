@@ -13,7 +13,7 @@ import typer
 import click
 import keyring
 
-from gita.constants import CONFIG_FILE, KEYRING_SERVICE
+from gita.constants import CONFIG_FILE, KEYRING_SERVICE, VALID_STYLES
 from gita.config.storage import load_config, save_config
 from gita.utils.console import print_error, print_info, print_success
 
@@ -57,7 +57,11 @@ def init_command():
     provider = _prompt_required("Enter provider name", default=existing.get("provider") or "")
     base_url = _prompt_required("Enter API base URL", default=existing.get("base_url") or "")
     model = _prompt_required("Enter model name", default=existing.get("model") or "")
-    style = _prompt_required("Enter commit style (conventional/simple/detailed)", default=existing.get("style") or "")
+    style = typer.prompt(
+        "Enter commit style",
+        default=existing.get("style") or "conventional",
+        type=click.Choice(VALID_STYLES),
+    )
 
     if existing_key:
         new_key = typer.prompt("Enter API key (leave blank to keep existing)", default="", hide_input=True)
