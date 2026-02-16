@@ -14,7 +14,7 @@ def show_loading(text: str = "Loading..."):
         with show_loading("Generating..."):
             do_something()
     """
-    spinner = Spinner("dots", text=text)
+    spinner = Spinner("bouncingBall", text=text)
 
     with Live(spinner, refresh_per_second=12, console=console):
         yield
