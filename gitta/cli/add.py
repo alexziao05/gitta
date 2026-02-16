@@ -11,12 +11,13 @@ import typer
 from gitta.git.repository import GitRepository
 from gitta.core.commit_service import CommitService
 from gitta.config.settings import Settings
-from gitta.cli.confirm import confirm_and_commit
+from gitta.cli.confirm import confirm_and_commit, confirm_and_commit_groups
 from gitta.utils.console import print_error, print_info, print_success, print_warning
 from gitta.utils.loading import show_loading
 
 def add_command(
     files: list[str] = typer.Argument(..., help="Files or paths to stage."),
+    split: bool = typer.Option(None, "--split/--no-split", help="Split changes into multiple scoped commits"),
 ):
     """
     Stage files and generate a commit message.
@@ -26,6 +27,7 @@ def add_command(
 
     Usage:
         gitta add <files>
+        gitta add <files> --split
     """
 
     if not GitRepository.is_git_repo():
@@ -47,24 +49,42 @@ def add_command(
     print_success(f"Staged {len(staged)} file(s): {', '.join(staged)}")
 
     try:
-        Settings().validate_api_key()
+        settings = Settings()
+        settings.validate_api_key()
     except RuntimeError as e:
         print_error(f"Error: {e}")
         raise typer.Exit(code=1)
 
+    use_split = split if split is not None else settings.multi_file
     service = CommitService()
 
-    try:
-        with show_loading("Generating commit message..."):
-            message, was_truncated = service.run()
-    except RuntimeError as e:
-        print_error(f"Error: {e}")
-        raise typer.Exit(code=1)
+    if use_split:
+        try:
+            with show_loading("Analyzing changes and generating commit messages..."):
+                grouped, was_truncated = service.run_split()
+        except RuntimeError as e:
+            print_error(f"Error: {e}")
+            raise typer.Exit(code=1)
 
-    if was_truncated:
-        print_warning("Warning: Diff was too large and was truncated. The commit message may not cover all changes.")
+        if was_truncated:
+            print_warning("Warning: Diff was too large and was truncated. The commit messages may not cover all changes.")
 
-    committed = confirm_and_commit(message)
+        if len(grouped) == 1:
+            committed = confirm_and_commit(grouped[0][1])
+        else:
+            committed = confirm_and_commit_groups(grouped)
+    else:
+        try:
+            with show_loading("Generating commit message..."):
+                message, was_truncated = service.run()
+        except RuntimeError as e:
+            print_error(f"Error: {e}")
+            raise typer.Exit(code=1)
+
+        if was_truncated:
+            print_warning("Warning: Diff was too large and was truncated. The commit message may not cover all changes.")
+
+        committed = confirm_and_commit(message)
 
     if not committed:
         GitRepository.unstage_files(staged)
