@@ -55,4 +55,9 @@ gitta ship
 | `gitta commit` | Generate a commit message for staged changes |
 | `gitta commit --dry-run` | Preview the message without committing |
 | `gitta ship` | Stage all, commit, and push |
+| `gitta log` | Show recent commits in a table |
+| `gitta log -n 20` | Show last 20 commits |
+| `gitta config list` | Show all configuration values |
+| `gitta config get <key>` | Get a single config value |
+| `gitta config set <key> <value>` | Update a config value |
 | `gitta doctor` | Check your setup for issues |
