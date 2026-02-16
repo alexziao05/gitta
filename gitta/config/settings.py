@@ -9,7 +9,7 @@
 import keyring
 
 from gitta.config.storage import load_config
-from gitta.constants import DEFAULT_MAX_DIFF_CHARS, KEYRING_SERVICE, VALID_STYLES
+from gitta.constants import DEFAULT_MAX_DIFF_CHARS, DEFAULT_MULTI_FILE, KEYRING_SERVICE, VALID_STYLES
 
 REQUIRED_FIELDS = ["provider", "base_url", "model", "style"]
 
@@ -34,6 +34,7 @@ class Settings:
         self.model = data["model"]
         self.style = data["style"]
         self.max_diff_chars = int(data.get("max_diff_chars", DEFAULT_MAX_DIFF_CHARS))
+        self.multi_file = bool(data.get("multi_file", DEFAULT_MULTI_FILE))
 
     def validate_api_key(self) -> None:
         """Check that an API key exists in keyring for this provider."""
