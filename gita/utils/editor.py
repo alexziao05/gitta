@@ -2,7 +2,7 @@ import os
 import tempfile
 import subprocess
 
-def open_editor_with_content(initial_content: str) -> str: 
+def open_editor_with_message(initial_message: str) -> str: 
     """
     Opens vi with the given initial content. 
 
@@ -16,7 +16,7 @@ def open_editor_with_content(initial_content: str) -> str:
     # Create a temporary file 
     with tempfile.NamedTemporaryFile(suffix=".tmp", delete=False) as tmp_file:
         tmp_file_path = tmp_file.name
-        tmp_file.write(initial_content.encode())
+        tmp_file.write(initial_message.encode())
         tmp_file.flush()
 
     try: 

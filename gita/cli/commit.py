@@ -8,6 +8,7 @@
 
 import typer 
 from gita.core.commit_service import CommitService
+from gita.utils.editor import open_editor_with_message
 
 def commit_command(dry_run: bool = typer.Option(False, "--dry-run", help="Generate commit message without committing")):
     """
@@ -34,14 +35,33 @@ def commit_command(dry_run: bool = typer.Option(False, "--dry-run", help="Genera
     if dry_run:
         return
     
-    confirm = typer.confirm("Commit with this message?", default=True)
+    while True: 
+        choice = typer.prompt(
+            '\nCommit with this message? [y/n/e] (y = yes, n = no, e = edit message)',
+            default="y"
+        ).strip().lower()
 
-    if confirm:
-        try:
-            service.commit(message)
-            typer.echo("Changes committed successfully.")
-        except RuntimeError as e:
-            typer.echo(f"Error: {e}")
-            raise typer.Exit(code=1)
-    else:
-        typer.echo("Commit aborted.")
+        if choice == 'y':
+            try:
+                service.commit(message)
+                typer.echo("Commit successful!")
+                break
+            except RuntimeError as e:
+                typer.echo(f"Error: {e}")
+                raise typer.Exit(code=1)
+            break 
+
+        elif choice == 'n':
+            typer.echo("Commit aborted.")
+            break
+
+        elif choice == 'e':
+            message = open_editor_with_message(message)
+
+            if not message.strip():
+                typer.echo("Commit message cannot be empty. Please try again.")
+            else:
+                typer.echo("\nUpdated commit message:\n")
+                typer.echo(message)
+        else:
+            typer.echo("Invalid choice. Please enter 'y', 'n', or 'e'.")
