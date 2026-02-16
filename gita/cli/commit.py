@@ -6,14 +6,12 @@
 #   - Pass arguments to CommitService
 #   - Handle CLI-level errors
 
-import typer 
-from rich.console import Console
+import typer
 
 from gita.core.commit_service import CommitService
-from gita.utils.console import print_error, print_success, print_info, print_regular
+from gita.cli.confirm import confirm_and_commit
+from gita.utils.console import print_error, print_info
 from gita.utils.loading import show_loading
-
-console = Console()
 
 def commit_command(dry_run: bool = typer.Option(False, "--dry-run", help="Generate commit message without committing")):
     """
@@ -36,8 +34,7 @@ def commit_command(dry_run: bool = typer.Option(False, "--dry-run", help="Genera
         raise typer.Exit(code=1)
 
     if dry_run:
+        print_info(message)
         return
-    
-    service.confirm_commit(dry_run=dry_run, message=message)
-    
-    
+
+    confirm_and_commit(message)

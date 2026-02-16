@@ -8,11 +8,10 @@
 #   - Send prompt
 #   - Return text output
 
-import os 
 import keyring
 from openai import OpenAI
 
-from gita.ai.prompts import COMMIT_PROMPT_TEMPLATE
+from gita.ai.prompts import COMMIT_PROMPT_TEMPLATE, STYLE_INSTRUCTIONS
 from gita.config.settings import Settings
 from gita.constants import KEYRING_SERVICE
 
@@ -32,6 +31,7 @@ class AIClient:
         )
 
         self.model = settings.model
+        self.style = settings.style
 
     def generate_commit_message(self, diff: str) -> str:
         """
@@ -43,7 +43,8 @@ class AIClient:
         Returns:
             str: The generated commit message.
         """
-        prompt = COMMIT_PROMPT_TEMPLATE.format(diff=diff)
+        style_instructions = STYLE_INSTRUCTIONS.get(self.style, STYLE_INSTRUCTIONS["conventional"])
+        prompt = COMMIT_PROMPT_TEMPLATE.format(diff=diff, style_instructions=style_instructions)
 
         response = self.client.chat.completions.create(
             model=self.model,

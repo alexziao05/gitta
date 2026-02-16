@@ -47,7 +47,7 @@ def doctor_command():
     # 3. Check config file exists
     if not CONFIG_FILE.exists():
         print_error("[FAIL] Config file not found. Run 'gita init' to set up.")
-        all_passed = False
+        print_error("\nSome checks failed. Review the issues above.")
         return
 
     print_success(f"[OK] Config file found at {CONFIG_FILE}")
@@ -57,6 +57,7 @@ def doctor_command():
         config = load_config()
     except Exception as e:
         print_error(f"[FAIL] Could not read config: {e}")
+        print_error("\nSome checks failed. Review the issues above.")
         return
 
     required_fields = ["provider", "base_url", "model", "style"]
@@ -76,7 +77,6 @@ def doctor_command():
     else:
         print_error(f"[FAIL] No API key found in keyring for '{provider}'. Run 'gita init'.")
         all_passed = False
-        return
 
     # 6. Check provider connectivity and model availability
     base_url = config.get("base_url", "")

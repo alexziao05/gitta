@@ -5,6 +5,7 @@
 #   - Check git repo
 #   - Stage files
 #   - Commit
+#   - Push
 #   - Amend
 
 import subprocess
@@ -57,4 +58,35 @@ class GitRepository:
             text=True
         )
         if result.returncode != 0:
-            raise RuntimeError(f"Error: {result.stderr}")
+            raise RuntimeError(result.stderr.strip())
+
+    @staticmethod
+    def revert_last_commit() -> None:
+        result = subprocess.run(
+            ["git", "reset", "--soft", "HEAD~1"],
+            capture_output=True,
+            text=True
+        )
+        if result.returncode != 0:
+            raise RuntimeError(result.stderr.strip())
+
+    @staticmethod
+    def get_current_branch() -> str:
+        result = subprocess.run(
+            ["git", "rev-parse", "--abbrev-ref", "HEAD"],
+            capture_output=True,
+            text=True
+        )
+        if result.returncode != 0:
+            raise RuntimeError(result.stderr.strip())
+        return result.stdout.strip()
+
+    @staticmethod
+    def push() -> None:
+        result = subprocess.run(
+            ["git", "push"],
+            capture_output=True,
+            text=True
+        )
+        if result.returncode != 0:
+            raise RuntimeError(result.stderr.strip())

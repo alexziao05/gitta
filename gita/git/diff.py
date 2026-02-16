@@ -23,5 +23,5 @@ def get_staged_diff() -> str:
         text=True
     )
     if result.returncode != 0:
-        raise RuntimeError(f"Error: {result.stderr}")
+        raise RuntimeError(result.stderr.strip())
     return result.stdout.strip()
