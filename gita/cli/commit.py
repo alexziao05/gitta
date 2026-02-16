@@ -34,38 +34,10 @@ def commit_command(dry_run: bool = typer.Option(False, "--dry-run", help="Genera
     except RuntimeError as e:
         typer.echo(f"Error: {e}")
         raise typer.Exit(code=1)
-    
-    typer.echo("Generated commit message:\n")
-    typer.echo(message)
 
     if dry_run:
         return
     
-    while True: 
-        choice = typer.prompt(
-            '\nCommit with this message? [y/n/e] (y = yes, n = no, e = edit message)',
-            default="y"
-        ).strip().lower()
-
-        if choice == 'y':
-            try:
-                service.commit(message)
-                typer.echo("Commit successful!")
-                break
-            except RuntimeError as e:
-                typer.echo(f"Error: {e}")
-                raise typer.Exit(code=1)
-            break 
-
-        elif choice == 'n':
-            typer.echo("Commit aborted.")
-            break
-
-        elif choice == 'e':
-            message = open_editor_with_message(message)
-
-            if not message.strip():
-                typer.echo("Commit message cannot be empty.")
-                message = service.run(dry_run=True)  # Regenerate original
-        else:
-            typer.echo("Invalid choice. Please enter 'y', 'n', or 'e'.")
+    service.confirm_commit(dry_run=dry_run, message=message)
+    
+    

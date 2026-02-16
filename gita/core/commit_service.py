@@ -9,9 +9,14 @@
 #   - Confirm
 #   - Commit
 
+import typer
+
 from gita.git.repository import GitRepository
 from gita.git.diff import get_staged_diff
 from gita.core.generator import generate_commit_message
+from gita.utils.editor import open_editor_with_message
+from gita.utils.console import print_error, print_success, print_info
+
 
 class CommitService:
     """
@@ -54,4 +59,46 @@ class CommitService:
             RuntimeError: If the commit command fails.
         """
         GitRepository.commit(message)
+
+    def confirm_commit(self, dry_run: bool, message: str):
+        """
+        Asks the user to confirm the commit message.
+
+        Args:
+            message (str): The commit message to confirm.
+
+        """
+
+        print_success("\nGenerated commit message:\n")
+        print_info(message)
+
+        if dry_run:
+            return
+
+        while True:
+            choice = typer.prompt(
+                "\nCommit with this message? [y/n/e]",
+                default="y"
+            ).strip().lower()
+
+            if choice == "y":
+                GitRepository.commit(message)
+                print_success("Commit successful.")
+                break
+
+            elif choice == "n":
+                print_error("Commit cancelled.")
+                break
+
+            elif choice == "e":
+                message = open_editor_with_message(message)
+
+                if not message.strip():
+                    print_error("Commit message cannot be empty.")
+                    message = self.run(dry_run=True)  # Regenerate original message
+
+            else:
+                print_error("Invalid option. Enter y, n, or e.")
+
+
 
