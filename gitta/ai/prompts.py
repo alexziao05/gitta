@@ -41,3 +41,32 @@ The changes affect these files: {file_list}
 Git diff:
 {diff}
 """
+
+PR_PROMPT_TEMPLATE = """
+You are an expert software engineer writing a pull request description.
+
+Based on the following commits, file stats, and diff, generate:
+1. A short PR title (under 70 characters, no prefix)
+2. A markdown body with:
+   - A "## Summary" section with 1-3 bullet points explaining what changed and why
+   - A "## Changes" section listing key modifications
+
+Keep it concise and focused on what a reviewer needs to know.
+The diff may be truncated — use the file stats and commits for full coverage.
+
+Respond in this exact format (no extra text):
+TITLE: <title here>
+BODY:
+<markdown body here>
+
+Branch: {branch}
+
+Commits:
+{commits}
+
+File stats:
+{stat}
+
+Diff (may be truncated):
+{diff}
+"""

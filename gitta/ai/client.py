@@ -11,7 +11,7 @@
 import keyring
 from openai import OpenAI
 
-from gitta.ai.prompts import COMMIT_PROMPT_TEMPLATE, SCOPED_COMMIT_PROMPT_TEMPLATE, STYLE_INSTRUCTIONS
+from gitta.ai.prompts import COMMIT_PROMPT_TEMPLATE, PR_PROMPT_TEMPLATE, SCOPED_COMMIT_PROMPT_TEMPLATE, STYLE_INSTRUCTIONS
 from gitta.config.settings import Settings
 from gitta.constants import KEYRING_SERVICE
 
@@ -55,6 +55,51 @@ class AIClient:
         )
 
         return response.choices[0].message.content.strip()
+
+    def generate_pr_description(self, branch: str, commits: str, stat: str, diff: str) -> tuple[str, str]:
+        """
+        Generate a PR title and body from branch commits and diff.
+
+        Args:
+            branch: The current branch name.
+            commits: The commit log (oneline format).
+            stat: The diffstat summary (git diff --stat).
+            diff: The full diff vs base branch.
+
+        Returns:
+            tuple: (title, body) strings.
+        """
+        prompt = PR_PROMPT_TEMPLATE.format(
+            branch=branch,
+            commits=commits,
+            stat=stat,
+            diff=diff,
+        )
+
+        response = self.client.chat.completions.create(
+            model=self.model,
+            messages=[
+                {"role": "user", "content": prompt}
+            ],
+            temperature=0,
+        )
+
+        text = response.choices[0].message.content.strip()
+
+        # Parse TITLE: and BODY: from response
+        title = ""
+        body = ""
+        if "TITLE:" in text and "BODY:" in text:
+            title_part, body_part = text.split("BODY:", 1)
+            title = title_part.replace("TITLE:", "").strip()
+            body = body_part.strip()
+        else:
+            # Fallback: use first line as title, rest as body
+            lines = text.split("\n", 1)
+            title = lines[0].strip()
+            body = lines[1].strip() if len(lines) > 1 else ""
+
+        return title, body
 
     def generate_scoped_commit_message(self, scope: str, files: list[str], diff: str) -> str:
         """
