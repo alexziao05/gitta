@@ -35,3 +35,12 @@ def print_info(message: str):
         message (str): The informational message to print.
     """
     console.print(f"[blue]{message}[/blue]")
+
+def print_regular(message: str):
+    """
+    Prints a regular message without any special formatting.
+
+    Args:
+        message (str): The message to print.
+    """
+    console.print(message)
