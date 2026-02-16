@@ -36,6 +36,9 @@ def print_info(message: str):
     """
     console.print(f"[blue]{message}[/blue]")
 
+def print_warning(message: str):
+    console.print(f"[yellow]{message}[/yellow]")
+
 def print_regular(message: str):
     """
     Prints a regular message without any special formatting.

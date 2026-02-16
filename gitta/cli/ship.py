@@ -13,7 +13,7 @@ from gitta.git.repository import GitRepository
 from gitta.core.commit_service import CommitService
 from gitta.config.settings import Settings
 from gitta.cli.confirm import confirm_and_commit
-from gitta.utils.console import print_error, print_info, print_success
+from gitta.utils.console import print_error, print_info, print_success, print_warning
 from gitta.utils.loading import show_loading
 
 def ship_command():
@@ -60,10 +60,13 @@ def ship_command():
 
     try:
         with show_loading("Generating commit message..."):
-            message = service.run()
+            message, was_truncated = service.run()
     except RuntimeError as e:
         print_error(f"Error: {e}")
         raise typer.Exit(code=1)
+
+    if was_truncated:
+        print_warning("Warning: Diff was too large and was truncated. The commit message may not cover all changes.")
 
     committed = confirm_and_commit(message)
 

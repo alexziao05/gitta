@@ -49,7 +49,7 @@ def confirm_and_commit(message: str) -> bool:
             if not message.strip():
                 print_error("\nCommit message cannot be empty.")
                 service = CommitService()
-                message = service.run(dry_run=True)
+                message, _ = service.run(dry_run=True)
 
             print_success("\nUpdated commit message:\n")
             print_info(message)

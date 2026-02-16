@@ -7,15 +7,15 @@
 
 import subprocess
 
-def get_staged_diff() -> str:
-    """
-    Get the diff of staged changes.
+from gitta.constants import DEFAULT_MAX_DIFF_CHARS
 
-    This function retrieves the diff of changes that have been staged for commit.
-    It uses the `git diff --cached` command to get the relevant information.
+
+def get_staged_diff(max_chars: int = DEFAULT_MAX_DIFF_CHARS) -> tuple[str, bool]:
+    """
+    Get the diff of staged changes, truncating if too large.
 
     Returns:
-        str: The diff of staged changes.
+        tuple: (diff_text, was_truncated)
     """
     result = subprocess.run(
         ["git", "diff", "--cached"],
@@ -24,4 +24,8 @@ def get_staged_diff() -> str:
     )
     if result.returncode != 0:
         raise RuntimeError(result.stderr.strip())
-    return result.stdout.strip()
+
+    diff = result.stdout.strip()
+    if len(diff) > max_chars:
+        return diff[:max_chars], True
+    return diff, False

@@ -16,3 +16,5 @@ CONFIG_FILE = CONFIG_DIR / "config.toml"
 KEYRING_SERVICE = "gitta"
 
 VALID_STYLES = ["conventional", "simple", "detailed"]
+
+DEFAULT_MAX_DIFF_CHARS = 32000  # ~8k tokens, safe for most models

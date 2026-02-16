@@ -11,7 +11,7 @@ import typer
 from gitta.core.commit_service import CommitService
 from gitta.config.settings import Settings
 from gitta.cli.confirm import confirm_and_commit
-from gitta.utils.console import print_error, print_info
+from gitta.utils.console import print_error, print_info, print_warning
 from gitta.utils.loading import show_loading
 
 def commit_command(dry_run: bool = typer.Option(False, "--dry-run", help="Generate commit message without committing")):
@@ -35,10 +35,13 @@ def commit_command(dry_run: bool = typer.Option(False, "--dry-run", help="Genera
 
     try:
         with show_loading("Generating commit message..."):
-            message = service.run(dry_run=dry_run)
+            message, was_truncated = service.run(dry_run=dry_run)
     except RuntimeError as e:
         print_error(f"Error: {e}")
         raise typer.Exit(code=1)
+
+    if was_truncated:
+        print_warning("Warning: Diff was too large and was truncated. The commit message may not cover all changes.")
 
     if dry_run:
         print_info(message)
