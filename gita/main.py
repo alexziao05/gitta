@@ -8,11 +8,13 @@
 
 import typer
 
+from gita.cli.add import add_command
 from gita.cli.commit import commit_command
 from gita.cli.init import init_command
 
 app = typer.Typer(help="Gita - AI-powered Git commit message generator")
 
+app.command(name="add")(add_command)
 app.command(name="commit")(commit_command)
 app.command(name="init")(init_command)
 

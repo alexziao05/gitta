@@ -60,20 +60,22 @@ class CommitService:
         """
         GitRepository.commit(message)
 
-    def confirm_commit(self, dry_run: bool, message: str):
+    def confirm_commit(self, dry_run: bool, message: str) -> bool:
         """
         Asks the user to confirm the commit message.
 
         Args:
             message (str): The commit message to confirm.
 
+        Returns:
+            bool: True if the commit was made, False if cancelled.
         """
 
         print_success("\nGenerated commit message:\n")
         print_info(message)
 
         if dry_run:
-            return
+            return False
 
         while True:
             choice = typer.prompt(
@@ -84,11 +86,11 @@ class CommitService:
             if choice == "y":
                 GitRepository.commit(message)
                 print_success("\nCommit successful.")
-                break
+                return True
 
             elif choice == "n":
                 print_error("\nCommit cancelled.")
-                break
+                return False
 
             elif choice == "e":
                 message = open_editor_with_message(message)
