@@ -75,6 +75,15 @@ Stage everything, generate a commit message, and push — all in one step:
 gitta ship
 ```
 
+### Branch Names
+
+Generate a branch name from a natural language description:
+
+```bash
+gitta branch "fix login timeout"           # → fix/login-timeout
+gitta branch "add user avatar upload" -c   # Create and checkout the branch
+```
+
 ### Pull Requests
 
 Generate a PR title and description from all commits on your branch:
