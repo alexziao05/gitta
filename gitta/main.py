@@ -9,6 +9,7 @@
 import typer
 
 from gitta.cli.add import add_command
+from gitta.cli.branch import branch_command
 from gitta.cli.commit import commit_command
 from gitta.cli.config import config_app
 from gitta.cli.doctor import doctor_command
@@ -20,6 +21,7 @@ from gitta.cli.ship import ship_command
 app = typer.Typer(help="Gitta - AI-powered Git commit message generator")
 
 app.command(name="add")(add_command)
+app.command(name="branch")(branch_command)
 app.command(name="commit")(commit_command)
 app.add_typer(config_app, name="config")
 app.command(name="doctor")(doctor_command)

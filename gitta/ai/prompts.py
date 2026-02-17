@@ -42,6 +42,23 @@ Git diff:
 {diff}
 """
 
+BRANCH_PROMPT_TEMPLATE = """
+You are an expert software engineer.
+
+Generate a git branch name from the following description.
+
+Rules:
+- Use lowercase letters, numbers, and hyphens only
+- Use a conventional prefix: feat/, fix/, refactor/, docs/, chore/, test/, perf/, ci/
+- Keep it short (2-5 words after the prefix)
+- Use hyphens to separate words
+- No trailing hyphens
+
+Respond with ONLY the branch name, nothing else.
+
+Description: {description}
+"""
+
 PR_PROMPT_TEMPLATE = """
 You are an expert software engineer writing a pull request description.
 
