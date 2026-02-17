@@ -97,6 +97,19 @@ gitta pr --base develop     # Compare against a specific base branch
 
 When creating, you can **confirm** (y), **edit** (e), or **cancel** (n) before the PR is submitted. Requires the [GitHub CLI](https://cli.github.com/) (`gh`).
 
+### Merging
+
+Merge the PR for your current branch directly from the terminal:
+
+```bash
+gitta merge              # Merge commit (default)
+gitta merge --squash     # Squash and merge
+gitta merge --rebase     # Rebase and merge
+gitta merge -D           # Merge without deleting the remote branch
+```
+
+Requires the [GitHub CLI](https://cli.github.com/) (`gh`).
+
 ### Utilities
 
 ```bash
