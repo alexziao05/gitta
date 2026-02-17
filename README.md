@@ -97,6 +97,15 @@ gitta pr --base develop     # Compare against a specific base branch
 
 When creating, you can **confirm** (y), **edit** (e), or **cancel** (n) before the PR is submitted. Requires the [GitHub CLI](https://cli.github.com/) (`gh`).
 
+### Explain
+
+Explain what a commit or file change does in plain English:
+
+```bash
+gitta explain abc1234        # Explain a commit
+gitta explain src/main.py    # Explain uncommitted changes to a file
+```
+
 ### Merging
 
 Merge the PR for your current branch directly from the terminal:
