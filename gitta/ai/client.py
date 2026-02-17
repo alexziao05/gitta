@@ -11,7 +11,7 @@
 import keyring
 from openai import OpenAI
 
-from gitta.ai.prompts import BRANCH_PROMPT_TEMPLATE, COMMIT_PROMPT_TEMPLATE, PR_PROMPT_TEMPLATE, SCOPED_COMMIT_PROMPT_TEMPLATE, STYLE_INSTRUCTIONS
+from gitta.ai.prompts import BRANCH_PROMPT_TEMPLATE, COMMIT_PROMPT_TEMPLATE, EXPLAIN_PROMPT_TEMPLATE, PR_PROMPT_TEMPLATE, SCOPED_COMMIT_PROMPT_TEMPLATE, STYLE_INSTRUCTIONS
 from gitta.config.settings import Settings
 from gitta.constants import KEYRING_SERVICE
 
@@ -112,6 +112,29 @@ class AIClient:
             str: The generated branch name (e.g., "feat/add-login-page").
         """
         prompt = BRANCH_PROMPT_TEMPLATE.format(description=description)
+
+        response = self.client.chat.completions.create(
+            model=self.model,
+            messages=[
+                {"role": "user", "content": prompt}
+            ],
+            temperature=0,
+        )
+
+        return response.choices[0].message.content.strip()
+
+    def generate_explanation(self, diff: str, context: str = "") -> str:
+        """
+        Generate a plain English explanation of a diff.
+
+        Args:
+            diff: The git diff to explain.
+            context: Optional context string (e.g., commit message, file path).
+
+        Returns:
+            str: The explanation text.
+        """
+        prompt = EXPLAIN_PROMPT_TEMPLATE.format(diff=diff, context=context)
 
         response = self.client.chat.completions.create(
             model=self.model,

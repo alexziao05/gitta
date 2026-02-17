@@ -59,6 +59,24 @@ Respond with ONLY the branch name, nothing else.
 Description: {description}
 """
 
+EXPLAIN_PROMPT_TEMPLATE = """
+You are an expert software engineer explaining code changes to a teammate.
+
+Given the following git diff, explain what changed and why in plain English.
+
+Rules:
+- Start with a one-line summary
+- Then list the key changes as bullet points
+- Mention any potential side effects or things a reviewer should watch for
+- Keep it concise but thorough
+- Use simple language — avoid jargon where possible
+
+{context}
+
+Diff:
+{diff}
+"""
+
 PR_PROMPT_TEMPLATE = """
 You are an expert software engineer writing a pull request description.
 
