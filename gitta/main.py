@@ -15,6 +15,7 @@ from gitta.cli.config import config_app
 from gitta.cli.doctor import doctor_command
 from gitta.cli.init import init_command
 from gitta.cli.log import log_command
+from gitta.cli.merge import merge_command
 from gitta.cli.pr import pr_command
 from gitta.cli.ship import ship_command
 
@@ -27,6 +28,7 @@ app.add_typer(config_app, name="config")
 app.command(name="doctor")(doctor_command)
 app.command(name="init")(init_command)
 app.command(name="log")(log_command)
+app.command(name="merge")(merge_command)
 app.command(name="pr")(pr_command)
 app.command(name="ship")(ship_command)
 
