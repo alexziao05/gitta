@@ -13,6 +13,7 @@ from gitta.cli.branch import branch_command
 from gitta.cli.commit import commit_command
 from gitta.cli.config import config_app
 from gitta.cli.doctor import doctor_command
+from gitta.cli.explain import explain_command
 from gitta.cli.init import init_command
 from gitta.cli.log import log_command
 from gitta.cli.merge import merge_command
@@ -26,6 +27,7 @@ app.command(name="branch")(branch_command)
 app.command(name="commit")(commit_command)
 app.add_typer(config_app, name="config")
 app.command(name="doctor")(doctor_command)
+app.command(name="explain")(explain_command)
 app.command(name="init")(init_command)
 app.command(name="log")(log_command)
 app.command(name="merge")(merge_command)
