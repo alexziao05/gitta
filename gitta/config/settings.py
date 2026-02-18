@@ -6,10 +6,8 @@
 #   - Validate required fields
 #   - Return structured config object
 
-import keyring
-
 from gitta.config.storage import load_config
-from gitta.constants import DEFAULT_MAX_DIFF_CHARS, DEFAULT_MULTI_FILE, KEYRING_SERVICE, VALID_STYLES
+from gitta.constants import DEFAULT_MAX_DIFF_CHARS, DEFAULT_MULTI_FILE, VALID_STYLES
 
 REQUIRED_FIELDS = ["provider", "base_url", "model", "style"]
 
@@ -33,13 +31,13 @@ class Settings:
         self.base_url = data["base_url"]
         self.model = data["model"]
         self.style = data["style"]
+        self.api_key = data.get("api_key", "")
         self.max_diff_chars = int(data.get("max_diff_chars", DEFAULT_MAX_DIFF_CHARS))
         self.multi_file = bool(data.get("multi_file", DEFAULT_MULTI_FILE))
 
     def validate_api_key(self) -> None:
-        """Check that an API key exists in keyring for this provider."""
-        api_key = keyring.get_password(KEYRING_SERVICE, self.provider)
-        if not api_key:
+        """Check that an API key exists in the config."""
+        if not self.api_key:
             raise RuntimeError(
-                f"API key not found for '{self.provider}'. Run 'gitta init' to configure."
+                "API key not found. Run 'gitta init' to configure."
             )

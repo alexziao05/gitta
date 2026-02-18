@@ -9,9 +9,8 @@
 #   - Check model availability
 
 import shutil
-import keyring
 
-from gitta.constants import CONFIG_FILE, KEYRING_SERVICE
+from gitta.constants import CONFIG_FILE
 from gitta.config.storage import load_config
 from gitta.git.repository import GitRepository
 from gitta.utils.console import print_error, print_info, print_success
@@ -68,14 +67,13 @@ def doctor_command():
             print_error(f"[FAIL] Config field '{field}' is missing or empty. Run 'gitta init' to fix.")
             all_passed = False
 
-    # 5. Check API key in keyring
-    provider = config.get("provider", "")
-    api_key = keyring.get_password(KEYRING_SERVICE, provider) if provider else None
+    # 5. Check API key in config
+    api_key = config.get("api_key", "")
 
     if api_key:
-        print_success(f"[OK] API key found in keyring for '{provider}'")
+        print_success("[OK] API key found in config")
     else:
-        print_error(f"[FAIL] No API key found in keyring for '{provider}'. Run 'gitta init'.")
+        print_error("[FAIL] No API key found in config. Run 'gitta init'.")
         all_passed = False
 
     # 6. Check provider connectivity and model availability

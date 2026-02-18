@@ -11,9 +11,8 @@
 
 import typer
 import click
-import keyring
 
-from gitta.constants import CONFIG_FILE, KEYRING_SERVICE, VALID_STYLES
+from gitta.constants import CONFIG_FILE, VALID_STYLES
 from gitta.config.storage import load_config, save_config
 from gitta.utils.console import print_error, print_info, print_success
 
@@ -36,12 +35,9 @@ def init_command():
     """
 
     existing = {}
-    existing_key = None
 
     if CONFIG_FILE.exists():
         existing = load_config()
-        existing_provider = existing.get("provider", "")
-        existing_key = keyring.get_password(KEYRING_SERVICE, existing_provider) if existing_provider else None
 
         print_info("Existing configuration found.")
 
@@ -52,7 +48,6 @@ def init_command():
 
         if action == "reset":
             existing = {}
-            existing_key = None
 
     provider = _prompt_required("Enter provider name", default=existing.get("provider") or "")
     base_url = _prompt_required("Enter API base URL", default=existing.get("base_url") or "")
@@ -63,6 +58,7 @@ def init_command():
         type=click.Choice(VALID_STYLES),
     )
 
+    existing_key = existing.get("api_key", "")
     if existing_key:
         new_key = typer.prompt("Enter API key (leave blank to keep existing)", default="", hide_input=True)
         api_key = new_key if new_key else existing_key
@@ -78,11 +74,9 @@ def init_command():
         "base_url": base_url,
         "model": model,
         "style": style,
+        "api_key": api_key,
     }
 
     save_config(config_data)
-
-    if api_key:
-        keyring.set_password(KEYRING_SERVICE, provider, api_key)
 
     print_success("Configuration saved successfully!")

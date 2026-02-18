@@ -1,12 +1,11 @@
 [project]
 name = "gitta"
-version = "0.1.4"
+version = "0.1.5"
 description = "AI-powered Git commit message generator from your terminal"
 readme = "README.md"
 license = {text = "Apache-2.0"}
 requires-python = ">=3.11"
 dependencies = [
-    "keyring>=25.7.0",
     "openai>=2.21.0",
     "rich>=14.3.2",
     "tomli-w>=1.2.0",

@@ -3,30 +3,26 @@
 #
 # Responsibilities:
 #   - Load config
-#   - Retrieve API key from keyring
+#   - Retrieve API key
 #   - Instantiate client
 #   - Send prompt
 #   - Return text output
 
-import keyring
 from openai import OpenAI
 
 from gitta.ai.prompts import BRANCH_PROMPT_TEMPLATE, COMMIT_PROMPT_TEMPLATE, EXPLAIN_PROMPT_TEMPLATE, PR_PROMPT_TEMPLATE, SCOPED_COMMIT_PROMPT_TEMPLATE, STYLE_INSTRUCTIONS
 from gitta.config.settings import Settings
-from gitta.constants import KEYRING_SERVICE
 
 
 class AIClient:
-    def __init__ (self): 
+    def __init__ (self):
         settings = Settings()
 
-        self.api_key = keyring.get_password(KEYRING_SERVICE, settings.provider)
+        if not settings.api_key:
+            raise ValueError("API key not found. Run 'gitta init' to configure your API key.")
 
-        if not self.api_key:
-            raise ValueError(f"API key not found. Run 'gitta init' to configure your API key.")
-        
         self.client = OpenAI(
-            api_key=self.api_key,
+            api_key=settings.api_key,
             base_url=settings.base_url
         )
 

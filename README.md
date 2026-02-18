@@ -31,7 +31,7 @@ Run the interactive setup wizard to configure your AI provider:
 gitta init
 ```
 
-You'll be prompted for your provider name, API base URL, model, commit style, and API key. Your API key is stored securely in the system keyring.
+You'll be prompted for your provider name, API base URL, model, commit style, and API key. Your configuration is stored in `~/.gitta/config.toml`.
 
 <p align="center">
   <img src="https://raw.githubusercontent.com/alexziao05/gitta/main/configuration.png" alt="Recommended Configuration" width="500">
